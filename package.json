@@ -1,0 +1,45 @@
+{
+  "name": "librecampus",
+  "version": "1.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm -r --parallel dev",
+    "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md,css}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md,css}\"",
+    "test": "pnpm -r test",
+    "test:e2e": "pnpm -r test:e2e",
+    "test:cov": "pnpm -r test:cov",
+    "typecheck": "pnpm -r typecheck",
+    "db:migrate": "pnpm --filter @librecampus/api db:migrate",
+    "db:seed": "pnpm --filter @librecampus/api db:seed",
+    "db:generate": "pnpm --filter @librecampus/api db:generate",
+    "db:studio": "pnpm --filter @librecampus/api db:studio",
+    "docker:up": "docker-compose up --build",
+    "docker:down": "docker-compose down",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "husky": "^9.1.0",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.3.0",
+    "typescript": "^5.5.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css}": [
+      "prettier --write"
+    ]
+  }
+}
