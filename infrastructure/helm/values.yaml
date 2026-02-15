@@ -1,0 +1,88 @@
+replicaCount: 1
+
+image:
+  api:
+    repository: librecampus/api
+    tag: latest
+    pullPolicy: IfNotPresent
+  web:
+    repository: librecampus/web
+    tag: latest
+    pullPolicy: IfNotPresent
+  worker:
+    repository: librecampus/worker
+    tag: latest
+    pullPolicy: IfNotPresent
+
+service:
+  api:
+    type: ClusterIP
+    port: 4000
+  web:
+    type: ClusterIP
+    port: 3000
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: campus.example.com
+      paths:
+        - path: /api
+          pathType: Prefix
+          service: api
+        - path: /
+          pathType: Prefix
+          service: web
+  tls:
+    - secretName: librecampus-tls
+      hosts:
+        - campus.example.com
+
+postgresql:
+  enabled: true
+  auth:
+    database: librecampus
+    username: librecampus
+    password: changeme
+
+redis:
+  enabled: true
+  auth:
+    enabled: false
+
+minio:
+  enabled: true
+  rootUser: minioadmin
+  rootPassword: minioadmin
+  defaultBuckets: librecampus
+
+env:
+  JWT_SECRET: changeme-in-production
+  JWT_EXPIRES_IN: 15m
+  JWT_REFRESH_EXPIRES_IN: 7d
+
+resources:
+  api:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  web:
+    limits:
+      cpu: 300m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
+  worker:
+    limits:
+      cpu: 300m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
